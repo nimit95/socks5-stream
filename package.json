@@ -1,0 +1,24 @@
+{
+  "name": "socks5-stream",
+  "version": "0.1.0",
+  "description": "Convert any server into socks5 using streams",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nimit95/socks5-stream.git"
+  },
+  "keywords": [
+    "socks5",
+    "stream",
+    "server"
+  ],
+  "author": "Nimit Aggarwal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nimit95/socks5-stream/issues"
+  },
+  "homepage": "https://github.com/nimit95/socks5-stream#readme"
+}
