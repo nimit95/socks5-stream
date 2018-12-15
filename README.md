@@ -47,6 +47,6 @@ Can test the server using cURL command
 
 # Note
 * Current the package is in its alpha stage.
-* Only SOCKS5 no authentication is supported yet.
+* Only SOCKS5 no authentication method is supported.
 
-If you guys want me to support additional functionaloty like AUTHENTICATION and CONNECT, BIND, create issue on this repo. I will be more than happy to continue its development.  
+If you guys want me to support additional fucntionality like AUTHENTICATION and CONNECT, BIND, please create issue on this repo. I will be more than happy to continue its development.  
