@@ -40,8 +40,10 @@ var server = net.createServer((socket) => {
 server.listen(8124, () => {
   console.log('server bound');
 });
-
 ```
+
+Can test the server using cURL command
+`curl --socks5-hostname localhost:8124 http://www.google.com`
 
 # Note
 * Current the package is in its alpha stage.
