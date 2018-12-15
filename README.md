@@ -8,7 +8,7 @@ npm install socks5-stream
 
 ## Usage
 
-The first event emiited by the stream will always be a destination host and port in format <HOSTNAME>,<PORT>.<br>
+The first event emiited by the stream will always be a destination host and port in format &lt;HOSTNAME&gt;,&lt;PORT&gt;.<br>
 You can use this information to perform two actions -
 
 * Accept connection by calling `sockStreamObj.acceptConnection(true)`
