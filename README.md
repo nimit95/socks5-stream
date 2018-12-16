@@ -1,6 +1,5 @@
 # SOCKS5 STREAM
-A lightweight module which can tranform any server into SOCKS5 server. It does this by transforming incoming SOCKS5 stream into its respective protocol stream. It is a easily manageable and this package doesn't have any dependency.
-
+A lightweight module which can transform any server into a SOCKS5 server. It does this by transforming incoming SOCKS5 stream into its respective protocol stream. It is an easily manageable and this package doesn't have any dependency.
 ## Installation
 ```bash
 npm install socks5-stream
