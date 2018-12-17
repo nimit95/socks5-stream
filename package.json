@@ -1,6 +1,6 @@
 {
   "name": "socks5-stream",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Convert any server into socks5 using streams",
   "main": "./src/index.js",
   "scripts": {
