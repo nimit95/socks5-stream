@@ -17,7 +17,7 @@ After this all the events will have the your PROTOCOL data. This data can consum
 
 Simple Example of accepting a connection and printing the incoming data(In this case HTTP) 
 ```javascript
-const socks5Stream = require('../src/index');
+const socks5Stream = require('socks5-stream);
 const net = require('net');
 // Server mock 
 
