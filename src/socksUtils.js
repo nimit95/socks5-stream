@@ -1,15 +1,15 @@
 
 const constants = require('./constants');
 var checkIntialSocksChunk = function(chunk) {
-  // console.log(chunk.length, chunk[0]!=0x05, chunk[1] == 0x00, chunk.length !== parseInt(chunk[1]) + 2);
+  // console.log(chunk.length, chunk[0]!=constants.socksVersion, chunk[1] == 0x00, chunk.length !== parseInt(chunk[1]) + 2);
   
-  if(chunk.length < 3 || chunk[0]!=0x05 || chunk[1] == 0x00 || chunk.length !== parseInt(chunk[1]) + 2) 
+  if(chunk.length < 3 || chunk[0]!=constants.socksVersion || chunk[1] == 0x00 || chunk.length !== parseInt(chunk[1]) + 2) 
     return false
   return true
 }
 
 var checkConnectResponse = function(chunk) {
-  if(chunk.length < 4 || chunk[0]!== 0x05 || chunk[2] !== 0x00) return false;
+  if(chunk.length < 4 || chunk[0]!== constants.socksVersion || chunk[2] !== 0x00) return false;
 
   if(chunk[3] === constants.SOCKS_ADDRESS.IPV4) {
     return chunk.length === 10;
@@ -25,7 +25,7 @@ var checkConnectResponse = function(chunk) {
 
 var generateInitialHandshakeResponse = function() {
   var buf = new Buffer.alloc(2,0x00, 'hex');
-  buf[0] = 0x05;
+  buf[0] = constants.socksVersion;
   buf[1] = 0x00;
   return buf;
 }
@@ -33,7 +33,7 @@ var generateInitialHandshakeResponse = function() {
 
 var connectionSuccessfulResponse = function() {
   var buf = new Buffer.alloc(4 + this.buf.length, 0x00, 'hex');
-  buf[0] = 0x05;
+  buf[0] = constants.socksVersion;
   buf[1] = 0x00;
   buf[2] = 0x00;
   buf[3] = 0x01;
@@ -43,7 +43,7 @@ var connectionSuccessfulResponse = function() {
 
 var connectionUnsuccessfulResponse = function() {
   var buf = new Buffer.alloc(4 + this.buf.length, 0x00, 'hex');
-  buf[0] = 0x05;
+  buf[0] = constants.socksVersion;
   buf[1] = 0x00;
   buf[2] = 0x00;
   buf[3] = 0x01;

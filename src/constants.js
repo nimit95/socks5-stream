@@ -1,4 +1,7 @@
 
+
+const socksVersion = 0x05
+
 const states = {
   NO_CONNECTION:0,
   CONNECTING:1,
