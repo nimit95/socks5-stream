@@ -3,8 +3,33 @@ const { Transform } = require('stream');
 const util = require('util');
 const constants = require('./constants'); 
 const socksUtils = require('./socksUtils');
+const utils = require('./utils')
 
-const socks5Stream = function(socket) {
+/**
+ * @param {net.Socket} socket 
+ *  Socket from which the Socks stream is comming.
+ * @param {Object} authDetails
+ *  Optional for authorization if any, Defaults to undefined
+ * {
+ *     //In case of username and password 
+ *    authType:"username",
+ *    username:<username>,
+ *    password:<password>
+ *    
+ *  
+ * }
+ */
+const socks5Stream = function(socket, authDetails) {
+
+  if(!utils.isSocketObjValid()) {
+    return new Error("Socket is Not defined");
+  } 
+
+  if(!utils.validateAuth()) {
+    return new Error("Wrong Authentication Details");
+  }
+  
+  this.authDetails = authDetails;
   this._socket = socket;
 
   Transform.call(this);

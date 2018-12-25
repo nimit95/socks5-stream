@@ -9,6 +9,10 @@ const states = {
   DISCONNECTED: 4
 } 
 
+const authTypes = {
+  username:1
+}
+
 const SOCKS_ADDRESS = {
   IPV4: 0x01,
   HOSTNAME: 0x03,
