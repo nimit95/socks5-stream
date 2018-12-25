@@ -1,8 +1,6 @@
 
 const constants = require('./constants');
 var checkIntialSocksChunk = function(chunk) {
-  // console.log(chunk.length, chunk[0]!=constants.socksVersion, chunk[1] == 0x00, chunk.length !== parseInt(chunk[1]) + 2);
-  
   if(chunk.length < 3 || chunk[0]!=constants.socksVersion || chunk[1] == 0x00 || chunk.length !== parseInt(chunk[1]) + 2) 
     return false
   return true

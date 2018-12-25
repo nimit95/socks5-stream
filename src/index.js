@@ -20,7 +20,7 @@ socks5Stream.prototype._transform = function(chunk, encoding, callback) {
   // console.log(chunk);
 
   if(this.state === constants.states.NO_CONNECTION) {
-
+  
     if(!socksUtils.checkIntialSocksChunk(chunk)) {
       return callback(new Error("Got Wrong initial Handshake(not 5,0,x)"));
     }
