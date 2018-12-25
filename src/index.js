@@ -23,7 +23,7 @@ const socks5Stream = function(socket, authDetails) {
 
   if(!utils.isSocketObjValid()) {
     return new Error("Socket is Not defined");
-  } 
+  }
 
   if(!utils.validateAuth()) {
     return new Error("Wrong Authentication Details");
