@@ -1,15 +1,13 @@
 
 const constants = require('./constants');
 var checkIntialSocksChunk = function(chunk) {
-  // console.log(chunk.length, chunk[0]!=0x05, chunk[1] == 0x00, chunk.length !== parseInt(chunk[1]) + 2);
-  
-  if(chunk.length < 3 || chunk[0]!=0x05 || chunk[1] == 0x00 || chunk.length !== parseInt(chunk[1]) + 2) 
+  if(chunk.length < 3 || chunk[0]!=constants.socksVersion || chunk[1] == 0x00 || chunk.length !== parseInt(chunk[1]) + 2) 
     return false
   return true
 }
 
 var checkConnectResponse = function(chunk) {
-  if(chunk.length < 4 || chunk[0]!== 0x05 || chunk[2] !== 0x00) return false;
+  if(chunk.length < 4 || chunk[0]!== constants.socksVersion || chunk[2] !== 0x00) return false;
 
   if(chunk[3] === constants.SOCKS_ADDRESS.IPV4) {
     return chunk.length === 10;
@@ -23,17 +21,21 @@ var checkConnectResponse = function(chunk) {
 
 }
 
-var generateInitialHandshakeResponse = function() {
+var generateInitialHandshakeResponse = function(authType) {
   var buf = new Buffer.alloc(2,0x00, 'hex');
-  buf[0] = 0x05;
-  buf[1] = 0x00;
+  buf[0] = constants.socksVersion;
+  if(authType == constants.authTypes.username) {
+    buf[1] = 0x02;
+  } else {
+    buf[1] = 0x00;
+  }
   return buf;
 }
 
 
 var connectionSuccessfulResponse = function() {
   var buf = new Buffer.alloc(4 + this.buf.length, 0x00, 'hex');
-  buf[0] = 0x05;
+  buf[0] = constants.socksVersion;
   buf[1] = 0x00;
   buf[2] = 0x00;
   buf[3] = 0x01;
@@ -43,7 +45,7 @@ var connectionSuccessfulResponse = function() {
 
 var connectionUnsuccessfulResponse = function() {
   var buf = new Buffer.alloc(4 + this.buf.length, 0x00, 'hex');
-  buf[0] = 0x05;
+  buf[0] = constants.socksVersion;
   buf[1] = 0x00;
   buf[2] = 0x00;
   buf[3] = 0x01;
@@ -103,9 +105,47 @@ var getHostnamePort = function(chunk) {
   return null;
 }
 
+var checkAuthRequest = function(chunk, authType) {
+  if(authType == constants.authTypes.username) {
+    return chunk.length > 3 && parseInt(chunk[1]) > 0 && chunk.length == 3 + parseInt(chunk[1]) + parseInt(chunk[parseInt(chunk[1]) + 2])
+  }
+}
+
+var getUsernamePassFromRequest = function(chunk, authType) {
+  if(authType == constants.authTypes.username) {
+    var uName = chunk.toString('ascii', 2, parseInt(chunk[1])+2);
+    var pass =  chunk.toString('ascii', 3 + parseInt(chunk[1]));
+
+    console.log(uName, pass);
+
+    return {
+      username: uName,
+      password: pass
+    }
+  }
+}
+
+var generateSuccessSocksAuthResponse = function() {
+  var buf = new Buffer.alloc(2, 0x00, 'hex');
+  buf[0] = constants.socksVersion;
+  buf[1] = 0x00;
+  return buf;
+}
+
+var generateFailSocksAuthResponse = function() {
+  var buf = new Buffer.alloc(2, 0x00, 'hex');
+  buf[0] = constants.socksVersion;
+  buf[1] = 0x01;
+  return buf;
+}
+
 module.exports.checkIntialSocksChunk = checkIntialSocksChunk;
 module.exports.checkConnectResponse = checkConnectResponse;
 module.exports.generateInitialHandshakeResponse = generateInitialHandshakeResponse;
 module.exports.connectionSuccessfulResponse = connectionSuccessfulResponse;
 module.exports.connectionUnsuccessfulResponse = connectionUnsuccessfulResponse;
 module.exports.getHostnamePort = getHostnamePort;
+module.exports.checkAuthRequest = checkAuthRequest;
+module.exports.getUsernamePassFromRequest = getUsernamePassFromRequest;
+module.exports.generateSuccessSocksAuthResponse = generateSuccessSocksAuthResponse;
+module.exports.generateFailSocksAuthResponse = generateFailSocksAuthResponse;
