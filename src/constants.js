@@ -6,7 +6,8 @@ module.exports.states = {
   NO_CONNECTION:0,
   CONNECTING:1,
   CONNECTED: 3,
-  DISCONNECTED: 4
+  DISCONNECTED: 4,
+  AUTHENTICATION: 5
 } 
 
 module.exports.authTypes = {

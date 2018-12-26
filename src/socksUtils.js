@@ -21,10 +21,14 @@ var checkConnectResponse = function(chunk) {
 
 }
 
-var generateInitialHandshakeResponse = function() {
+var generateInitialHandshakeResponse = function(authType) {
   var buf = new Buffer.alloc(2,0x00, 'hex');
   buf[0] = constants.socksVersion;
-  buf[1] = 0x00;
+  if(authType == constants.authTypes.username) {
+    buf[1] = 0x02;
+  } else {
+    buf[1] = 0x00;
+  }
   return buf;
 }
 
@@ -101,9 +105,47 @@ var getHostnamePort = function(chunk) {
   return null;
 }
 
+var checkAuthRequest = function(chunk, authType) {
+  if(authType == constants.authTypes.username) {
+    return chunk.length > 3 && parseInt(chunk[1]) > 0 && chunk.length == 3 + parseInt(chunk[1]) + parseInt(chunk[parseInt(chunk[1]) + 2])
+  }
+}
+
+var getUsernamePassFromRequest = function(chunk, authType) {
+  if(authType == constants.authTypes.username) {
+    var uName = chunk.toString('ascii', 2, parseInt(chunk[1])+2);
+    var pass =  chunk.toString('ascii', 3 + parseInt(chunk[1]));
+
+    console.log(uName, pass);
+
+    return {
+      username: uName,
+      password: pass
+    }
+  }
+}
+
+var generateSuccessSocksAuthResponse = function() {
+  var buf = new Buffer.alloc(2, 0x00, 'hex');
+  buf[0] = constants.socksVersion;
+  buf[1] = 0x00;
+  return buf;
+}
+
+var generateFailSocksAuthResponse = function() {
+  var buf = new Buffer.alloc(2, 0x00, 'hex');
+  buf[0] = constants.socksVersion;
+  buf[1] = 0x01;
+  return buf;
+}
+
 module.exports.checkIntialSocksChunk = checkIntialSocksChunk;
 module.exports.checkConnectResponse = checkConnectResponse;
 module.exports.generateInitialHandshakeResponse = generateInitialHandshakeResponse;
 module.exports.connectionSuccessfulResponse = connectionSuccessfulResponse;
 module.exports.connectionUnsuccessfulResponse = connectionUnsuccessfulResponse;
 module.exports.getHostnamePort = getHostnamePort;
+module.exports.checkAuthRequest = checkAuthRequest;
+module.exports.getUsernamePassFromRequest = getUsernamePassFromRequest;
+module.exports.generateSuccessSocksAuthResponse = generateSuccessSocksAuthResponse;
+module.exports.generateFailSocksAuthResponse = generateFailSocksAuthResponse;

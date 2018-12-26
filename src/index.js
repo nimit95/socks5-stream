@@ -21,26 +21,32 @@ const utils = require('./utils')
  */
 const socks5Stream = function(socket, authDetails) {
 
-  if(!utils.isSocketObjValid()) {
-    return new Error("Socket is Not defined");
-  }
-
-  if(!utils.validateAuth()) {
-    return new Error("Wrong Authentication Details");
-  }
-  
-  this.authDetails = authDetails;
+  this.authDetails = authDetails || false;
   this._socket = socket;
 
   Transform.call(this);
 
   this.state = constants.states.NO_CONNECTION;
+
+  if(this.authDetails) {
+    this.authType = constants.authTypes[this.authDetails.authType] 
+  } else {
+    this.authType = false;
+  }
   
 }
 
 util.inherits(socks5Stream, Transform);
 
 socks5Stream.prototype._transform = function(chunk, encoding, callback) {
+
+  if(!utils.isSocketObjValid(this._socket)) {
+    return callback(new Error("Socket is not defined or valid"));
+  }
+
+  if(this.authDetails && !utils.validateAuth(this.authDetails)) {
+    return callback(new Error("Wrong Authentication Details"));
+  }
 
   // console.log(chunk);
 
@@ -50,10 +56,34 @@ socks5Stream.prototype._transform = function(chunk, encoding, callback) {
       return callback(new Error("Got Wrong initial Handshake(not 5,0,x)"));
     }
     //We need to conect 
-    this._socket.write(socksUtils.generateInitialHandshakeResponse(), () => {
-      this.state = constants.states.CONNECTING;
+    this._socket.write(socksUtils.generateInitialHandshakeResponse(this.authType), () => {
+      
+      this.state = this.authDetails? constants.states.AUTHENTICATION : constants.states.CONNECTING;
       callback(null);
     });
+
+  }
+
+  if(this.state === constants.states.AUTHENTICATION) {
+    if(!socksUtils.checkAuthRequest(chunk, this.authType)) {
+      return callback(new Error("Wrong Authentication Details"));
+    }
+
+    var authDetailRequest = socksUtils.getUsernamePassFromRequest(chunk, this.authType);
+
+    if(this.authDetails.username == authDetailRequest.username && this.authDetails.password == authDetailRequest.password) {
+      this._socket.write(socksUtils.generateSuccessSocksAuthResponse(), () => {
+        this.state = constants.states.CONNECTING;
+      })
+      callback(null);
+    } else {
+
+      this._socket.write(socksUtils.generateFailSocksAuthResponse(), () => {
+        this.state = constants.states.DISCONNECTED;
+      })
+      //Closing the connection in case of wrong username/password
+      this._socket.end();
+    }
 
   }
 

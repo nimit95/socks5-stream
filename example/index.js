@@ -5,7 +5,11 @@ const net = require('net');
 
 var server = net.createServer((socket) => {
   // Create a new socks5 stream
-  var sockStream = new socks5Stream(socket);
+  var sockStream = new socks5Stream(socket, {
+    username:"username",
+    password:"password",
+    authType:"username"
+  });
 
   //Piping the data to sock5 stream
   socket.pipe(sockStream).once('data', (data) => {
