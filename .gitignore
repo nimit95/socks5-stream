@@ -1,0 +1,10 @@
+# IDE
+.idea/
+.vscode/
+
+# Coverage
+coverage/
+.nyc_output/
+
+# NodeJS
+node_modules/
