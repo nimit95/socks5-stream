@@ -4,7 +4,7 @@
   "description": "Convert any server into socks5 using streams",
   "main": "./src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/nimit95/socks5-stream/issues"
   },
-  "homepage": "https://github.com/nimit95/socks5-stream#readme"
+  "homepage": "https://github.com/nimit95/socks5-stream#readme",
+  "devDependencies": {
+    "jest": "^23.6.0"
+  }
 }
