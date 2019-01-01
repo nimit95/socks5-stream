@@ -1,9 +1,9 @@
 
-const { Transform } = require('stream');
-const util = require('util');
-const constants = require('./constants'); 
-const socksUtils = require('./socksUtils');
-const utils = require('./utils')
+const { Transform } = require("stream");
+const util = require("util");
+const constants = require("./constants"); 
+const socksUtils = require("./socksUtils");
+const utils = require("./utils");
 
 /**
  * @param {net.Socket} socket 
@@ -29,12 +29,11 @@ const socks5Stream = function(socket, authDetails) {
   this.state = constants.states.NO_CONNECTION;
 
   if(this.authDetails) {
-    this.authType = constants.authTypes[this.authDetails.authType] 
+    this.authType = constants.authTypes[this.authDetails.authType];
   } else {
     this.authType = false;
   }
-  
-}
+};
 
 util.inherits(socks5Stream, Transform);
 
@@ -61,7 +60,6 @@ socks5Stream.prototype._transform = function(chunk, encoding, callback) {
       this.state = this.authDetails? constants.states.AUTHENTICATION : constants.states.CONNECTING;
       callback(null);
     });
-
   }
 
   if(this.state === constants.states.AUTHENTICATION) {
@@ -74,13 +72,13 @@ socks5Stream.prototype._transform = function(chunk, encoding, callback) {
     if(this.authDetails.username == authDetailRequest.username && this.authDetails.password == authDetailRequest.password) {
       this._socket.write(socksUtils.generateSuccessSocksAuthResponse(), () => {
         this.state = constants.states.CONNECTING;
-      })
+      });
       callback(null);
     } else {
 
       this._socket.write(socksUtils.generateFailSocksAuthResponse(), () => {
         this.state = constants.states.DISCONNECTED;
-      })
+      });
       //Closing the connection in case of wrong username/password
       this._socket.end();
     }
@@ -121,15 +119,15 @@ socks5Stream.prototype._transform = function(chunk, encoding, callback) {
         //return callback(null);
       });
     }
-  }
+  };
 
-  this._socket.on('close', () => {
+  this._socket.on("close", () => {
     this.state = constants.states.DISCONNECTED;
   });
-  this._socket.on('error', () => {
+  this._socket.on("error", () => {
     this.state = constants.states.DISCONNECTED;
   });
   
-}
+};
 
 module.exports = socks5Stream;

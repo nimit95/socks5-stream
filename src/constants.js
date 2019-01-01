@@ -8,17 +8,17 @@ module.exports.states = {
   CONNECTED: 3,
   DISCONNECTED: 4,
   AUTHENTICATION: 5
-} 
+}; 
 
 module.exports.authTypes = {
   username:1
-}
+};
 
 module.exports.SOCKS_ADDRESS = {
   IPV4: 0x01,
   HOSTNAME: 0x03,
   IPV6: 0x04
-}
+};
 
 module.exports.SOCKET_ERRORS = {
   NOT_DEFINED : "Socket is not defined or valid",
@@ -27,4 +27,4 @@ module.exports.SOCKET_ERRORS = {
   INVALID_AUTH_PACKET: "Invalid Authentication Packet received",
   INVALID_CONNECT: "Got Wrong Handshake(not 5,1,x,x,x...)",
   NO_CONNECTION : "Connection not established yet"
-}
+};
