@@ -1,11 +1,11 @@
 
 const constants = require("./constants"); 
 const utils = {
-  isSocketObjValid: function(socket) {
+  isSocketObjValid(socket) {
     return socket && typeof socket == "object";
   },
 
-  validateAuth: function(authDetails) {
+  validateAuth(authDetails) {
     if(typeof authDetails != "object"){
       return false;
     }
